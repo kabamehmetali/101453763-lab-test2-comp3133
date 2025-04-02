@@ -4,7 +4,7 @@ This is a responsive Angular web application that interacts with the SpaceX publ
 
 ## 🌐 Live Demo
 
-You can host it on[Vercel](https://101453763-lab-test2-comp3133.vercel.app/).
+[Deployment on Vercel](https://101453763-lab-test2-comp3133.vercel.app/).
 
 ---
 
@@ -131,7 +131,7 @@ Endpoints:
 
 ## 📄 License
 
-© 2025 [Mehmet Ali KABA]
+© 2025 Mehmet Ali KABA
 
 ### Screenshots
 
@@ -140,3 +140,6 @@ Endpoints:
 
 **Launch Details:**
 ![Launch Details](./images/2.png)
+
+**Launch items:**
+![Launch List](./images/3.png)
