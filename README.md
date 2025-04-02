@@ -131,4 +131,12 @@ Endpoints:
 
 ## 📄 License
 
-MIT License © 2025 [Mehmet Ali KABA]
+© 2025 [Mehmet Ali KABA]
+
+### Screenshots
+
+**Launch List:**
+![Launch List](./images/1.png)
+
+**Launch Details:**
+![Launch Details](./images/2.png)
