@@ -33,6 +33,14 @@
 
   <!-- Right Main Content for Mission Cards -->
   <div class="missions-container">
+    <!-- Central Search Bar -->
+    <div class="search-bar">
+      <mat-form-field appearance="outline">
+        <mat-label>Search by Name or Year</mat-label>
+        <input matInput placeholder="Search..." [(ngModel)]="searchTerm">
+      </mat-form-field>
+      <button mat-raised-button color="primary" (click)="getMissions()">Search</button>
+    </div>
     <h2 class="title">SpaceX Mission Launch List</h2>
     <div class="cards-container">
       <mat-card *ngFor="let mission of missions" class="mission-card">
