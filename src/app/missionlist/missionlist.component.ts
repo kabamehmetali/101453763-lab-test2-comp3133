@@ -27,15 +27,12 @@ import { Mission } from '../models/mission';
 })
 export class MissionListComponent implements OnInit {
   missions: Mission[] = [];
-  // Filter properties for the left sidebar
   selectedYear: string = '';
   selectedLaunchSuccess: string = '';
   selectedLandingSuccess: string = '';
-
-  // Search bar term for mission name or year
+  // New property for mission status filter ("successful" or "failed")
+  selectedStatus: string = '';
   searchTerm: string = '';
-
-  // Optional: List of years for filter buttons
   availableYears: string[] = ['2006', '2007', '2008', '2009', '2010', '2011', '2012', '2013', '2014', '2015', '2016', '2017', '2018', '2019', '2020', '2021', '2022', '2023'];
 
   constructor(private spacexService: SpacexApiService) { }
@@ -44,7 +41,6 @@ export class MissionListComponent implements OnInit {
     this.getMissions();
   }
 
-  // Load missions using left filters then apply search filtering by name or year
   getMissions(): void {
     const filters: { [key: string]: any } = {
       launch_year: this.selectedYear,
@@ -52,16 +48,24 @@ export class MissionListComponent implements OnInit {
       land_success: this.selectedLandingSuccess
     };
     this.spacexService.getFilteredLaunches(filters).subscribe(data => {
-      // If search term is provided, further filter the data client-side
+      let filteredData = data;
+      // Apply search filter if provided
       if (this.searchTerm.trim() !== '') {
         const term = this.searchTerm.trim().toLowerCase();
-        this.missions = data.filter(mission =>
+        filteredData = filteredData.filter(mission =>
           mission.mission_name.toLowerCase().includes(term) ||
           mission.launch_year.includes(term)
         );
-      } else {
-        this.missions = data;
       }
+      // Apply mission status filter if selected (using helper method)
+      if (this.selectedStatus) {
+        filteredData = filteredData.filter(mission =>
+          this.selectedStatus === 'successful'
+            ? !this.isMissionFailed(mission)
+            : this.isMissionFailed(mission)
+        );
+      }
+      this.missions = filteredData;
     });
   }
 
@@ -80,11 +84,23 @@ export class MissionListComponent implements OnInit {
     this.getMissions();
   }
 
+  filterByStatus(status: string): void {
+    this.selectedStatus = status;
+    this.getMissions();
+  }
+
   clearFilters(): void {
     this.selectedYear = '';
     this.selectedLaunchSuccess = '';
     this.selectedLandingSuccess = '';
+    this.selectedStatus = '';
     this.searchTerm = '';
     this.getMissions();
+  }
+
+  // Determines overall mission status based on API data.
+  // A mission is considered failed if launch_success is explicitly false.
+  isMissionFailed(mission: Mission): boolean {
+    return mission.launch_success === false;
   }
 }

@@ -12,12 +12,12 @@ export class SpacexApiService {
 
   constructor(private http: HttpClient) { }
 
-  // Get all launches without filters
+  // Retrieves all launches from SpaceX API
   getLaunches(): Observable<Mission[]> {
     return this.http.get<Mission[]>(`${this.baseUrl}/launches`);
   }
 
-  // Get launches with filters. The filters object is converted to query parameters.
+  // Retrieves launches based on provided filters
   getFilteredLaunches(filters: { [key: string]: any }): Observable<Mission[]> {
     const queryParams = Object.entries(filters)
       .filter(([key, value]) => value !== null && value !== '')

@@ -1,4 +1,4 @@
-<!-- File: src/app/missionlist/missionlist.component.html -->
+<!-- File: src/app/missionlist/mission.component.html -->
 <div class="mission-list-wrapper">
   <!-- Left Sidebar for Filters -->
   <div class="filter-sidebar">
@@ -28,6 +28,14 @@
         <button mat-button (click)="filterByLandingSuccess('false')" [class.active]="selectedLandingSuccess==='false'">False</button>
       </div>
     </div>
+    <!-- New Filter Group for Mission Status -->
+    <div class="filter-group">
+      <p class="filter-label">Mission Status:</p>
+      <div class="filter-buttons">
+        <button mat-button (click)="filterByStatus('successful')" [class.active]="selectedStatus==='successful'">Successful</button>
+        <button mat-button (click)="filterByStatus('failed')" [class.active]="selectedStatus==='failed'">Failed</button>
+      </div>
+    </div>
     <button mat-raised-button color="accent" (click)="clearFilters()" class="clear-btn">
       Clear Filters
     </button>
@@ -36,7 +44,6 @@
   <!-- Right Main Content for Mission Cards -->
   <div class="missions-container">
     <!-- Central Search Bar -->
-    <h2 class="title">SpaceX Mission Launch List</h2>
     <div class="search-bar">
       <mat-form-field appearance="outline">
         <mat-label>Search by Name or Year</mat-label>
@@ -44,11 +51,12 @@
       </mat-form-field>
       <button mat-raised-button color="primary" (click)="getMissions()">Search</button>
     </div>
-    
+    <h2 class="title">SpaceX Mission Launch List</h2>
     <div class="cards-container">
       <mat-card *ngFor="let mission of missions" 
                 class="mission-card"
-                [routerLink]="['/mission', mission.flight_number]">
+                [routerLink]="['/mission', mission.flight_number]"
+                [ngClass]="{'card-failed': isMissionFailed(mission), 'card-successful': !isMissionFailed(mission)}">
         <img mat-card-image [src]="mission.links.mission_patch_small" alt="{{ mission.mission_name }} patch">
         <mat-card-content>
           <p><strong>Name:</strong> {{ mission.mission_name }}</p>
@@ -62,6 +70,10 @@
           <p><strong>Launch Year:</strong> {{ mission.launch_year }}</p>
           <p><strong>Successful Launch:</strong> {{ mission.launch_success ? 'Yes' : 'No' }}</p>
           <p><strong>Successful Landing:</strong> {{ mission.land_success ? 'Yes' : 'No' }}</p>
+          <!-- Jumbotron-like status block using the helper method -->
+          <div class="jumbotron" [ngClass]="{'failed': isMissionFailed(mission), 'successful': !isMissionFailed(mission)}">
+            Mission Status: {{ isMissionFailed(mission) ? 'Failed' : 'Successful' }}
+          </div>
         </mat-card-content>
       </mat-card>
     </div>
