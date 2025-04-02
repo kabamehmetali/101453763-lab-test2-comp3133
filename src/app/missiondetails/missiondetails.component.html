@@ -1,30 +1,38 @@
 <!-- File: src/app/missiondetails/missiondetails.component.html -->
-<h2 class="title">SpaceX Mission Details</h2>
-
-<div *ngIf="mission; else noData" class="mission-details">
-  <mat-card>
-    <mat-card-header>
-      <mat-card-title>{{ mission.mission_name }} (Flight #{{ mission.flight_number }})</mat-card-title>
-      <mat-card-subtitle>Launched: {{ mission.launch_year }}</mat-card-subtitle>
-    </mat-card-header>
-    <img mat-card-image [src]="mission.links.mission_patch_small" alt="{{ mission.mission_name }} patch">
-    <mat-card-content>
-      <p>{{ mission.details }}</p>
-      <p><strong>Rocket Name:</strong> {{ mission.rocket.rocket_name }}</p>
-      <p><strong>Rocket Type:</strong> {{ mission.rocket.rocket_type }}</p>
+<div class="mission-details-wrapper" *ngIf="mission; else noData">
+  <div class="details-header">
+    <h2 class="mission-title">Mission - {{ mission.mission_name }}</h2>
+    <a mat-button routerLink="/" class="back-button">Back to List</a>
+  </div>
+  <div class="mission-details-content">
+    <img [src]="mission.links.mission_patch_small" alt="{{ mission.mission_name }} patch">
+    <div class="details-info">
+      <p><strong>Name:</strong> {{ mission.mission_name }}</p>
       <p>
-        <strong>Links:</strong>
-        <a [href]="mission.links.article_link" target="_blank">Article</a> |
-        <a [href]="mission.links.wikipedia" target="_blank">Wikipedia</a> |
-        <a [href]="mission.links.video_link" target="_blank">Video</a>
+        <strong>Mission Ids:</strong>
+        <span *ngIf="mission.mission_id && mission.mission_id.length; else dash">
+          {{ mission.mission_id.join(', ') }}
+        </span>
+        <ng-template #dash>-</ng-template>
       </p>
-    </mat-card-content>
-    <mat-card-actions>
-      <a mat-button routerLink="/">Back to List</a>
-    </mat-card-actions>
-  </mat-card>
+      <p><strong>Launch Year:</strong> {{ mission.launch_year }}</p>
+      <p><strong>Successful Launch:</strong> {{ mission.launch_success ? 'Yes' : 'No' }}</p>
+      <p><strong>Successful Landing:</strong> {{ mission.land_success ? 'Yes' : 'No' }}</p>
+      <p><strong>Rocket</strong></p>
+      <p>Name: {{ mission.rocket.rocket_name }}</p>
+      <p>Type: {{ mission.rocket.rocket_type }}</p>
+      <p><strong>Launch Site</strong></p>
+      <p>Name: {{ mission.launch_site?.site_name_long || '-' }}</p>
+      <p><strong>Launch Details</strong></p>
+      <p>{{ mission.details }}</p>
+    </div>
+  </div>
+  <div class="action-buttons">
+    <a mat-button class="action-btn" [href]="mission.links.article_link" target="_blank">Article</a>
+    <a mat-button class="action-btn" [href]="mission.links.wikipedia" target="_blank">Wikipedia</a>
+    <a mat-button class="action-btn" [href]="mission.links.video_link" target="_blank">Video</a>
+  </div>
 </div>
-
 <ng-template #noData>
   <p class="no-data">Mission not found.</p>
 </ng-template>

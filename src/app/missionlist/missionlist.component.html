@@ -28,12 +28,15 @@
         <button mat-button (click)="filterByLandingSuccess('false')" [class.active]="selectedLandingSuccess==='false'">False</button>
       </div>
     </div>
-    <button mat-raised-button color="accent" (click)="clearFilters()">Clear Filters</button>
+    <button mat-raised-button color="accent" (click)="clearFilters()" class="clear-btn">
+      Clear Filters
+    </button>
   </div>
 
   <!-- Right Main Content for Mission Cards -->
   <div class="missions-container">
     <!-- Central Search Bar -->
+    <h2 class="title">SpaceX Mission Launch List</h2>
     <div class="search-bar">
       <mat-form-field appearance="outline">
         <mat-label>Search by Name or Year</mat-label>
@@ -41,27 +44,25 @@
       </mat-form-field>
       <button mat-raised-button color="primary" (click)="getMissions()">Search</button>
     </div>
-    <h2 class="title">SpaceX Mission Launch List</h2>
+    
     <div class="cards-container">
-      <mat-card *ngFor="let mission of missions" class="mission-card">
-        <mat-card-header>
-          <mat-card-title>{{ mission.mission_name }} (Flight #{{ mission.flight_number }})</mat-card-title>
-          <mat-card-subtitle>Launched: {{ mission.launch_year }}</mat-card-subtitle>
-        </mat-card-header>
+      <mat-card *ngFor="let mission of missions" 
+                class="mission-card"
+                [routerLink]="['/mission', mission.flight_number]">
         <img mat-card-image [src]="mission.links.mission_patch_small" alt="{{ mission.mission_name }} patch">
         <mat-card-content>
-          <p>{{ mission.details }}</p>
-          <p><strong>Rocket:</strong> {{ mission.rocket.rocket_name }} ({{ mission.rocket.rocket_type }})</p>
+          <p><strong>Name:</strong> {{ mission.mission_name }}</p>
           <p>
-            <strong>Links:</strong>
-            <a [href]="mission.links.article_link" target="_blank">Article</a> |
-            <a [href]="mission.links.wikipedia" target="_blank">Wikipedia</a> |
-            <a [href]="mission.links.video_link" target="_blank">Video</a>
+            <strong>Mission Ids:</strong> 
+            <span *ngIf="mission.mission_id && mission.mission_id.length; else dash">
+              {{ mission.mission_id.join(', ') }}
+            </span>
+            <ng-template #dash>-</ng-template>
           </p>
+          <p><strong>Launch Year:</strong> {{ mission.launch_year }}</p>
+          <p><strong>Successful Launch:</strong> {{ mission.launch_success ? 'Yes' : 'No' }}</p>
+          <p><strong>Successful Landing:</strong> {{ mission.land_success ? 'Yes' : 'No' }}</p>
         </mat-card-content>
-        <mat-card-actions>
-          <a mat-button [routerLink]="['/mission', mission.flight_number]">Details</a>
-        </mat-card-actions>
       </mat-card>
     </div>
   </div>
