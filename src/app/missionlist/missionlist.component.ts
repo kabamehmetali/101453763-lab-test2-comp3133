@@ -27,7 +27,13 @@ import { Mission } from '../models/mission';
 })
 export class MissionListComponent implements OnInit {
   missions: Mission[] = [];
-  searchYear: string = '';
+  // Additional filter properties
+  selectedYear: string = '';
+  selectedLaunchSuccess: string = '';
+  selectedLandingSuccess: string = '';
+
+  // Optional: List of years to display as filter buttons (customize as needed)
+  availableYears: string[] = ['2006', '2007', '2008', '2009', '2010', '2011', '2012', '2013', '2014', '2015', '2016', '2017', '2018', '2019', '2020', '2021', '2022', '2023'];
 
   constructor(private spacexService: SpacexApiService) { }
 
@@ -35,19 +41,43 @@ export class MissionListComponent implements OnInit {
     this.getMissions();
   }
 
+  // Load missions based on filters; if no filter is set, load all missions.
   getMissions(): void {
-    if (this.searchYear) {
-      this.spacexService.getLaunchesByYear(this.searchYear).subscribe(data => {
-        this.missions = data;
-      });
-    } else {
-      this.spacexService.getLaunches().subscribe(data => {
-        this.missions = data;
-      });
-    }
+    // Build filters object
+    const filters: { [key: string]: any } = {
+      launch_year: this.selectedYear,
+      launch_success: this.selectedLaunchSuccess,
+      land_success: this.selectedLandingSuccess
+    };
+    // If no filters are set, you may choose to call getLaunches() instead.
+    this.spacexService.getFilteredLaunches(filters).subscribe(data => {
+      this.missions = data;
+    });
   }
 
-  onSearch(): void {
+  // Called when a filter button is clicked to set the year filter
+  filterByYear(year: string): void {
+    this.selectedYear = year;
+    this.getMissions();
+  }
+
+  // Called when a filter button for launch success is clicked
+  filterByLaunchSuccess(value: string): void {
+    this.selectedLaunchSuccess = value;
+    this.getMissions();
+  }
+
+  // Called when a filter button for landing success is clicked
+  filterByLandingSuccess(value: string): void {
+    this.selectedLandingSuccess = value;
+    this.getMissions();
+  }
+
+  // Clear all filters
+  clearFilters(): void {
+    this.selectedYear = '';
+    this.selectedLaunchSuccess = '';
+    this.selectedLandingSuccess = '';
     this.getMissions();
   }
 }
