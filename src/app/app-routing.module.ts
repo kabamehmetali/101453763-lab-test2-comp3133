@@ -1,9 +1,16 @@
-// File: src/app/app.routes.ts
-import { Routes } from '@angular/router';
+// File: src/app/app-routing.module.ts
+import { NgModule } from '@angular/core';
+import { RouterModule, Routes } from '@angular/router';
 import { MissionListComponent } from './missionlist/missionlist.component';
 import { MissionDetailsComponent } from './missiondetails/missiondetails.component';
 
-export const routes: Routes = [
+const routes: Routes = [
   { path: '', component: MissionListComponent },
   { path: 'mission/:flight_number', component: MissionDetailsComponent }
 ];
+
+@NgModule({
+  imports: [RouterModule.forRoot(routes)],
+  exports: [RouterModule]
+})
+export class AppRoutingModule { }

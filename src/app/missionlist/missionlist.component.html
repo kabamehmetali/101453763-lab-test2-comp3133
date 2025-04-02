@@ -1,0 +1,33 @@
+<!-- File: src/app/missionlist/missionlist.component.html -->
+<h2 class="title">SpaceX Mission Launch List</h2>
+
+<div class="search-container">
+  <mat-form-field appearance="fill">
+    <mat-label>Launch Year</mat-label>
+    <input matInput placeholder="Enter launch year" [(ngModel)]="searchYear">
+  </mat-form-field>
+  <button mat-raised-button color="primary" (click)="onSearch()">Search</button>
+</div>
+
+<div class="missions-container">
+  <mat-card *ngFor="let mission of missions" class="mission-card">
+    <mat-card-header>
+      <mat-card-title>{{ mission.mission_name }} (Flight #{{ mission.flight_number }})</mat-card-title>
+      <mat-card-subtitle>Launched: {{ mission.launch_year }}</mat-card-subtitle>
+    </mat-card-header>
+    <img mat-card-image [src]="mission.links.mission_patch_small" alt="{{ mission.mission_name }} patch">
+    <mat-card-content>
+      <p>{{ mission.details }}</p>
+      <p><strong>Rocket:</strong> {{ mission.rocket.rocket_name }} ({{ mission.rocket.rocket_type }})</p>
+      <p>
+        <strong>Links:</strong>
+        <a [href]="mission.links.article_link" target="_blank">Article</a> |
+        <a [href]="mission.links.wikipedia" target="_blank">Wikipedia</a> |
+        <a [href]="mission.links.video_link" target="_blank">Video</a>
+      </p>
+    </mat-card-content>
+    <mat-card-actions>
+      <a mat-button [routerLink]="['/mission', mission.flight_number]">Details</a>
+    </mat-card-actions>
+  </mat-card>
+</div>
